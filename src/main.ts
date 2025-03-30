@@ -41,10 +41,11 @@ const vcfFilesLoader = async (vcfFiles: File[]) => {
 };
 
 const vmgFilesPrepare = (vmgFiles: File[]) => {
-  vmgFiles.forEach((file) => {
+  const vmgFileNameSet = new Set<string>(vmgFiles.map((file) => file.name));
+  vmgFileNameSet.forEach((fileName) => {
     const option = document.createElement("option");
-    option.value = file.name;
-    option.textContent = file.name;
+    option.value = fileName;
+    option.textContent = fileName;
     vmgSelector.appendChild(option);
   });
   vmgSelector.hidden = false;
