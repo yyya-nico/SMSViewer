@@ -1,5 +1,8 @@
 @charset "UTF-8";
 @import "https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400&display=swap";
+@import "https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=arrow_back";
+
+$tablet-width: 768px;
 
 * {
   box-sizing: border-box;
@@ -219,6 +222,24 @@ header {
   }
 }
 
+#back {
+  padding: 0;
+  background-color: transparent;
+  border-radius: 0;
+
+  &[hidden] {
+    display: none;
+  }
+}
+
+.material-symbols-outlined {
+  font-variation-settings:
+    "FILL" 0,
+    "wght" 400,
+    "GRAD" 0,
+    "opsz" 40;
+}
+
 @function content-area-height($unit) {
   @return calc(#{100 + $unit} - var(--header-height));
 }
@@ -236,6 +257,10 @@ header {
     height: content-area-height(vh);
     height: content-area-height(dvh);
     border-right: 1px solid #484848;
+
+    &[hidden] {
+      display: none;
+    }
 
     .pick {
       display: flex;
@@ -262,9 +287,13 @@ header {
   display: none;
 }
 
-#vmg-selector:not([hidden]) {
+#vmg-selector {
   display: block;
   margin: 0 auto;
+
+  &[hidden] {
+    display: none;
+  }
 }
 
 #contacts {
@@ -274,7 +303,9 @@ header {
   list-style: none;
 
   li {
-    border-bottom: 1px solid #484848;
+    + li {
+      border-top: 1px solid #484848;
+    }
 
     button {
       width: 100%;
@@ -368,6 +399,21 @@ header {
     margin: 0 10px;
     font-size: small;
     color: #a0a0a0;
+  }
+}
+
+@media (width < $tablet-width) {
+  .wrap {
+    .col {
+      position: static;
+      width: 100%;
+      border-right: none;
+    }
+  }
+
+  #messages {
+    width: 100%;
+    max-width: none;
   }
 }
 

@@ -3,7 +3,13 @@ import "./style.scss";
 import { vCard, msgBody } from "./utils"
 import type { VCardProperty, SimpleVCardProperty, VCardObject } from "./utils";
 
+const tabletWidth = 768;
+const isSmartphoneMedia = window.matchMedia(`(width < ${tabletWidth}px)`);
+const isSmartphone = () => isSmartphoneMedia.matches;
+
+const back = document.getElementById("back") as HTMLButtonElement;
 const partner = document.querySelector("header .partner") as HTMLDivElement;
+const col = document.querySelector(".col") as HTMLDivElement;
 const pick = document.querySelector("label .pick") as HTMLSpanElement;
 const filePicker = document.getElementById("file-picker") as HTMLInputElement;
 const vmgSelector = document.getElementById("vmg-selector") as HTMLSelectElement;
@@ -160,6 +166,7 @@ let vmsgs: formattedMsg[] = [];
 const getPartnerTelNumberSet = () => 
   new Set<string>(vmsgs.map((message) => message.box === "INBOX" ? message.from : message.to).filter((telNumber) => telNumber));
 vmgSelector.addEventListener("change", async (e) => {
+  partner.textContent = "";
   contacts.textContent = "";
   messages.textContent = "";
   const selectedFile = (e.target as HTMLSelectElement).value;
@@ -173,6 +180,26 @@ vmgSelector.addEventListener("change", async (e) => {
     cts.find((contact) => contact.telNumber === telNumber) || { formattedName: "", sortString: "", telNumber }
   );
   await makeContactView(generatedCts);
+});
+
+const switchPanel = (elem: HTMLElement) => {
+  const activePanel = col.hidden ? messages : col;
+  activePanel.hidden = true;
+  elem.hidden = false;
+  if (elem === messages) {
+    back.hidden = false;
+  } else {
+    back.hidden = true;
+    partner.textContent = "";
+    contacts.querySelector(".active")?.classList.remove("active");
+    messages.textContent = "";
+  }
+};
+
+back.addEventListener("click", () => {
+  if (isSmartphone()) {
+    switchPanel(col);
+  }
 });
 
 contacts.addEventListener("click", async (e) => {
@@ -189,4 +216,19 @@ contacts.addEventListener("click", async (e) => {
     return messageTelNumber === telNumber;
   });
   await makeMessageView(selectedMessages);
+  if (isSmartphone()) {
+    switchPanel(messages);
+  }
 });
+
+const layoutControl = () => {
+  col.hidden = false;
+  if (isSmartphone()) {
+    messages.hidden = true;
+  } else {
+    messages.hidden = false;
+  }
+};
+
+layoutControl();
+isSmartphoneMedia.addEventListener("change", layoutControl);
