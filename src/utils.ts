@@ -111,5 +111,5 @@ const msgBody = {
     }
 }
 
-export type { VCardMeta, SimpleVCardProperty, ComplexVCardProperty, VCardProperty, VCardObject };
+export type { VCardMeta, VCardProperty, SimpleVCardProperty, VCardObject };
 export { vCard, msgBody };
