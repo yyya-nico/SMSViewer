@@ -183,8 +183,8 @@ vmgSelector.addEventListener("change", async (e) => {
 });
 
 const switchPanel = (elem: HTMLElement) => {
-  const activePanel = col.hidden ? messages : col;
-  activePanel.hidden = true;
+  const pairElem = elem === col ? messages : col;
+  pairElem.hidden = true;
   elem.hidden = false;
   if (elem === messages) {
     back.hidden = false;
@@ -222,11 +222,16 @@ contacts.addEventListener("click", async (e) => {
 });
 
 const layoutControl = () => {
-  col.hidden = false;
   if (isSmartphone()) {
-    messages.hidden = true;
+    const isReading = contacts.querySelector(".active") !== null;
+    if (isReading) {
+      switchPanel(messages);
+    } else {
+      switchPanel(col);
+    }
   } else {
-    messages.hidden = false;
+    back.hidden = true;
+    col.hidden = messages.hidden = false;
   }
 };
 
