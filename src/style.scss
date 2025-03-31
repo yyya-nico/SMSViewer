@@ -197,7 +197,7 @@ header {
   align-items: center;
   height: var(--header-height);
   padding: 15px 12.5px;
-  background: #111;
+  background-color: #111;
 
   h1 {
     overflow: hidden;
@@ -418,12 +418,17 @@ header {
 }
 
 @media print {
+  html {
+    color-scheme: light;
+  }
+
   body {
     color: #000;
-    background-color: #fff;
+    background-color: transparent;
   }
 
   header {
+    background-color: #efefef;
     border-bottom: 1px solid #484848;
 
     .partner {
@@ -437,12 +442,17 @@ header {
     display: none;
   }
 
+  #back {
+    display: none;
+  }
+
   #messages {
     width: 100%;
     padding: 0;
 
     .inbox {
       .text {
+        background-color: #efefef;
         border: 1px solid #484848;
 
         &::before {
@@ -453,6 +463,7 @@ header {
 
     .sentbox {
       .text {
+        background-color: #c3ff9b;
         border: 1px solid #6bd624;
 
         &::before {
