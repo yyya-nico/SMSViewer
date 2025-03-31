@@ -197,11 +197,21 @@ const switchPanel = (elem: HTMLElement) => {
   }
 };
 
-back.addEventListener("click", () => {
-  if (isSmartphone()) {
+window.addEventListener("popstate", (e) => {
+  const telNumber = e.state?.telNumber as string;
+  if (telNumber) {
+    const button = contacts.querySelector(`button[value="${telNumber}"]`) as HTMLButtonElement;
+    if (button) {
+      button.click();
+    } else {
+      history.replaceState({}, "", "/SMSViewer");
+    }
+  } else {
     switchPanel(col);
   }
 });
+
+back.addEventListener("click", () => history.back());
 
 contacts.addEventListener("click", async (e) => {
   const button = (e.target as HTMLElement).closest("button") as HTMLButtonElement;
@@ -210,8 +220,9 @@ contacts.addEventListener("click", async (e) => {
   }
   contacts.querySelector(".active")?.classList.remove("active");
   button.classList.add("active");
+  const formattedName = button.dataset.name;
   const telNumber = button.value;
-  partner.textContent = button.dataset.name || button.value;
+  partner.textContent = formattedName || telNumber;
   const selectedMessages = vmsgs.filter((message) => {
     const messageTelNumber = message.box === "INBOX" ? message.from : message.to;
     return messageTelNumber === telNumber;
@@ -219,20 +230,26 @@ contacts.addEventListener("click", async (e) => {
   await makeMessageView(selectedMessages);
   if (isSmartphone()) {
     switchPanel(messages);
+    if (e.isTrusted) {
+      history.pushState({ telNumber }, "", "#messages");
+    }
   }
 });
 
 const layoutControl = () => {
   if (isSmartphone()) {
-    const isReading = contacts.querySelector(".active") !== null;
-    if (isReading) {
+    const activeContact = contacts.querySelector(".active");
+    const telNumber = activeContact?.querySelector("button")?.value;
+    if (activeContact) {
       switchPanel(messages);
+      history.pushState({ telNumber }, "", "#messages");
     } else {
       switchPanel(col);
     }
   } else {
     back.hidden = true;
     col.hidden = messages.hidden = false;
+    history.replaceState({}, "", "/SMSViewer");
   }
 };
 
