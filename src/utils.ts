@@ -1,3 +1,34 @@
+const htmlspecialchars = (unsafeText: string) => {
+    return unsafeText.replace(
+        /[&'`"<>]/g, 
+        (match) => {
+            return {
+                '&': '&amp;',
+                "'": '&#x27;',
+                '`': '&#x60;',
+                '"': '&quot;',
+                '<': '&lt;',
+                '>': '&gt;',
+            }[match] || '';
+        }
+    );
+};
+
+const nl2br = (text: string) => {
+    return text.replace(/\n/g, "<br>");
+};
+
+const mapObjectValues = <T, U>(
+    obj: { [key: string]: T },
+    fn: (value: T) => U
+): { [key: string]: U } => {
+    const result: { [key: string]: U } = {};
+    for (const key in obj) {
+        result[key] = fn(obj[key]);
+    }
+    return result;
+};
+
 type VCardMeta = {
     [key: string]: string | boolean;
 };
@@ -112,4 +143,4 @@ const msgBody = {
 }
 
 export type { VCardMeta, VCardProperty, SimpleVCardProperty, VCardObject };
-export { vCard, msgBody };
+export { htmlspecialchars, nl2br, mapObjectValues, vCard, msgBody };

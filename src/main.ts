@@ -1,6 +1,6 @@
 import "./style.scss";
 
-import { vCard, msgBody } from "./utils"
+import { htmlspecialchars, nl2br, mapObjectValues, vCard, msgBody } from "./utils"
 import type { VCardProperty, SimpleVCardProperty, VCardObject } from "./utils";
 
 const initialTitle = document.title;
@@ -134,13 +134,15 @@ filePicker.addEventListener("change", async (e) => {
   vmgFilesPrepare(vmgFiles);
 });
 
+const mapHtmlspecialchars = (obj: { [key: string]: string }) => mapObjectValues(obj, htmlspecialchars);
+
 const makeContactView = async (formattedCts: formattedCts[]) => {
   const html = formattedCts
     .sort((a, b) => {
       const aName = a.sortString || a.formattedName || a.telNumber;
       const bName = b.sortString || b.formattedName || b.telNumber;
       return aName.localeCompare(bName);
-    }).map((contact) =>
+    }).map(mapHtmlspecialchars).map((contact) =>
     `<li>
       <button value="${contact.telNumber}" data-name="${contact.formattedName}">
         ${contact.formattedName ? `<div class="name">${contact.formattedName}</div>` : ""}
@@ -155,10 +157,15 @@ const makeContactView = async (formattedCts: formattedCts[]) => {
 const makeMessageView = async (formattedMsgs: formattedMsg[]) => {
   const html = formattedMsgs.filter((message) => message.type === "SMS")
     .sort((a, b) => a.date.getTime() - b.date.getTime())
+    .map((message) => ({
+      ...message,
+      date: message.date.toLocaleString(),
+    }))
+    .map(mapHtmlspecialchars)
     .map((message) => 
       `<div class="message-box ${message.box.toLowerCase()}" data-box="${message.box}" data-from="${message.from}" data-to="${message.to}">
-        <div class="text">${message.text.replace(/\n/g, "<br>")}</div>
-        <div class="date">${message.date.toLocaleString()}</div>
+        <div class="text">${nl2br(message.text)}</div>
+        <div class="date">${message.date}</div>
       </div>
       `
     ).join("\n");
