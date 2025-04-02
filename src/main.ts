@@ -3,6 +3,7 @@ import "./style.scss";
 import { vCard, msgBody } from "./utils"
 import type { VCardProperty, SimpleVCardProperty, VCardObject } from "./utils";
 
+const initialTitle = document.title;
 const tabletWidth = 768;
 const isSmartphoneMedia = window.matchMedia(`(width < ${tabletWidth}px)`);
 const isSmartphone = () => isSmartphoneMedia.matches;
@@ -103,6 +104,7 @@ const vmgFilesLoader = async (vmgFiles: File[]) => {
 };
 
 const resetFiles = () => {
+  document.title = initialTitle;
   partner.textContent = "";
   vmgSelector.hidden = true;
   const vmgOptions = vmgSelector.querySelectorAll("option");
@@ -167,6 +169,7 @@ let vmsgs: formattedMsg[] = [];
 const getPartnerTelNumberSet = () => 
   new Set<string>(vmsgs.map((message) => message.box === "INBOX" ? message.from : message.to).filter((telNumber) => telNumber));
 vmgSelector.addEventListener("change", async (e) => {
+  document.title = initialTitle;
   partner.textContent = "";
   contacts.textContent = "";
   messages.textContent = "";
@@ -191,6 +194,7 @@ const switchPanel = (elem: HTMLElement) => {
     back.hidden = false;
   } else {
     back.hidden = true;
+    document.title = initialTitle;
     partner.textContent = "";
     contacts.querySelector(".active")?.classList.remove("active");
     messages.textContent = "";
@@ -222,6 +226,7 @@ contacts.addEventListener("click", async (e) => {
   button.classList.add("active");
   const formattedName = button.dataset.name;
   const telNumber = button.value;
+  document.title = `${initialTitle} - ${formattedName || telNumber}`;
   partner.textContent = formattedName || telNumber;
   const selectedMessages = vmsgs.filter((message) => {
     const messageTelNumber = message.box === "INBOX" ? message.from : message.to;
