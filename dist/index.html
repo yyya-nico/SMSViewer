@@ -4,9 +4,9 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>SMS Viewer</title>
-    <meta name="color-scheme" content="dark">
-  <script type="module" crossorigin src="/SMSViewer/assets/index-CvfWNLkC.js"></script>
-  <link rel="stylesheet" crossorigin href="/SMSViewer/assets/index-Da5Yl7Z4.css">
+    <meta name="color-scheme" content="dark">
+  <script type="module" crossorigin src="/SMSViewer/assets/index-BqJVSnyg.js"></script>
+  <link rel="stylesheet" crossorigin href="/SMSViewer/assets/index-5xZ0oawl.css">
 </head>
 <body>
     <header>
@@ -24,14 +24,14 @@
                 <p>
                     .vmg形式のメッセージ、.vcf形式の連絡先に対応。<br>
                     ファイルは外部へ送信されませんのでご安心ください。<br>
-                    <a href="/SMSViewer/Sample.zip">サンプルファイルのダウンロード</a><br>
-                    サンプルファイルはダウンロード後、zipを展開し、最上位のフォルダーを選択して使用します。
                 </p>
             </div>
-            <label>
-                <select id="vmg-selector" hidden>
-                    <option value="">--- VMGファイルを選択 ---</option>
-                </select>
+            <div class="sample">
+                <button id="try-sample">サンプルを表示</button>
+            </div>
+            <label id="vmg-selector-label" hidden>
+                VMGファイルを選択
+                <select id="vmg-selector"></select>
             </label>
             <ul id="contacts"></ul>
         </div>
