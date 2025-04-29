@@ -13,6 +13,7 @@ const partner = document.querySelector("header .partner") as HTMLDivElement;
 const col = document.querySelector(".col") as HTMLDivElement;
 const pick = document.querySelector("label .pick") as HTMLSpanElement;
 const filePicker = document.getElementById("file-picker") as HTMLInputElement;
+const trySample = document.getElementById("try-sample") as HTMLButtonElement;
 const vmgSelector = document.getElementById("vmg-selector") as HTMLSelectElement;
 const contacts = document.getElementById("contacts") as HTMLUListElement;
 const messages = document.getElementById("messages") as HTMLDivElement;
@@ -115,9 +116,7 @@ const resetFiles = () => {
 
 let cts: formattedCts[] = [];
 const initialPickText = pick.textContent;
-filePicker.addEventListener("change", async (e) => {
-  const files = (e.target as HTMLInputElement).files;
-
+const fileHandler = async (files: FileList | File[] | null) => {
   resetFiles();
 
   if (!files?.length) {
@@ -132,6 +131,36 @@ filePicker.addEventListener("change", async (e) => {
 
   cts = await vcfFilesLoader(vcfFiles);
   vmgFilesPrepare(vmgFiles);
+};
+const initialTrySampleText = trySample.textContent;
+let files: FileList | File[] | null = null;
+filePicker.addEventListener("change", (e) => {
+  trySample.textContent = initialTrySampleText;
+  files = (e.target as HTMLInputElement).files;
+  fileHandler(files);
+});
+
+const sampleDisplayed = () => trySample.textContent !== initialTrySampleText;
+trySample.addEventListener("click", async () => {
+  if (sampleDisplayed()) {
+    files = null;
+    trySample.textContent = initialTrySampleText;
+  } else {
+    const filesPaths = [
+      "SMSViewer/Sample/CONTACTS/Contacts.vcf",
+      "SMSViewer/Sample/MAIL/INBOX/Sample.vmg",
+      "SMSViewer/Sample/MAIL/SENTBOX/Sample.vmg"
+    ];
+    files = await Promise.all(filesPaths
+      .map((path) =>
+        fetch(path)
+          .then((res) => res.blob())
+          .then((blob) => new File([blob], path.split("/").pop() || ""))
+      ));
+    trySample.textContent = "サンプルを非表示";
+  }
+  filePicker.value = "";
+  fileHandler(files);
 });
 
 const mapHtmlspecialchars = (obj: { [key: string]: string }) => mapObjectValues(obj, htmlspecialchars);
@@ -184,7 +213,7 @@ vmgSelector.addEventListener("change", async (e) => {
   if (!selectedFile) {
     return;
   };
-  const vmgFiles = [...filePicker.files!].filter((file) => file.name === selectedFile);
+  const vmgFiles = [...files!].filter((file) => file.name === selectedFile);
   vmsgs = await vmgFilesLoader(vmgFiles);
   const partnerTelNumbers = getPartnerTelNumberSet();
   const generatedCts = [...partnerTelNumbers].map((telNumber) => 
