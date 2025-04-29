@@ -290,15 +290,21 @@ header {
 #try-sample {
   display: block;
   margin: 0 auto;
+  font-size: 0.8em;
 }
 
-#vmg-selector {
-  display: block;
-  margin: 0 auto;
+#vmg-selector-label {
+  margin: 0 10px;
+  font-size: 0.9em;
 
   &[hidden] {
     display: none;
   }
+}
+
+#vmg-selector {
+  display: block;
+  margin: 5px 0 0 auto;
 }
 
 #contacts {

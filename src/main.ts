@@ -14,6 +14,7 @@ const col = document.querySelector(".col") as HTMLDivElement;
 const pick = document.querySelector("label .pick") as HTMLSpanElement;
 const filePicker = document.getElementById("file-picker") as HTMLInputElement;
 const trySample = document.getElementById("try-sample") as HTMLButtonElement;
+const vmgSelectorLabel = document.getElementById("vmg-selector-label") as HTMLLabelElement;
 const vmgSelector = document.getElementById("vmg-selector") as HTMLSelectElement;
 const contacts = document.getElementById("contacts") as HTMLUListElement;
 const messages = document.getElementById("messages") as HTMLDivElement;
@@ -50,7 +51,8 @@ const vmgFilesPrepare = (vmgFiles: File[]) => {
     option.textContent = fileName;
     vmgSelector.appendChild(option);
   });
-  vmgSelector.hidden = false;
+  vmgSelectorLabel.hidden = false;
+  vmgSelector.dispatchEvent(new Event("change"));
 };
 
 type VMessageObject = {
@@ -107,9 +109,8 @@ const vmgFilesLoader = async (vmgFiles: File[]) => {
 const resetFiles = () => {
   document.title = initialTitle;
   partner.textContent = "";
-  vmgSelector.hidden = true;
-  const vmgOptions = vmgSelector.querySelectorAll("option");
-  [...vmgOptions].filter((_, i) => i).forEach((option) => option.remove());
+  vmgSelectorLabel.hidden = true;
+  vmgSelector.textContent = "";
   contacts.textContent = "";
   messages.textContent = "";
 };
