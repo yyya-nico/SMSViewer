@@ -137,6 +137,7 @@ const initialTrySampleText = trySample.textContent;
 let files: FileList | File[] | null = null;
 filePicker.addEventListener("change", (e) => {
   trySample.textContent = initialTrySampleText;
+  trySample.disabled = (e.target as HTMLInputElement).value !== "";
   files = (e.target as HTMLInputElement).files;
   fileHandler(files);
 });
