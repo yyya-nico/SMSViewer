@@ -11,7 +11,7 @@ const isSmartphone = () => isSmartphoneMedia.matches;
 const back = document.getElementById("back") as HTMLButtonElement;
 const partner = document.querySelector("header .partner") as HTMLDivElement;
 const col = document.querySelector(".col") as HTMLDivElement;
-const pick = document.querySelector("label .pick") as HTMLSpanElement;
+const pickText = document.querySelector(".pick-text") as HTMLSpanElement;
 const filePicker = document.getElementById("file-picker") as HTMLInputElement;
 const trySample = document.getElementById("try-sample") as HTMLButtonElement;
 const vmgSelectorLabel = document.getElementById("vmg-selector-label") as HTMLLabelElement;
@@ -116,19 +116,19 @@ const resetFiles = () => {
 };
 
 let cts: formattedCts[] = [];
-const initialPickText = pick.textContent;
+const initialPickText = pickText.textContent;
 const fileHandler = async (files: FileList | File[] | null) => {
   resetFiles();
 
   if (!files?.length) {
-    pick.textContent = initialPickText;
+    pickText.textContent = initialPickText;
     return;
   };
 
   const vcfFiles = [...files].filter((file) => file.type === "text/vcard" || file.type === "text/x-vcard" || file.name.endsWith(".vcf"));
   const vmgFiles = [...files].filter((file) => file.name.endsWith(".vmg"));
 
-  pick.innerText = `${files.length}個のうち\n${vcfFiles.length + vmgFiles.length}個の有効なファイル`;
+  pickText.innerText = `${files.length}個のうち\n${vcfFiles.length + vmgFiles.length}個の有効なファイル`;
 
   cts = await vcfFilesLoader(vcfFiles);
   vmgFilesPrepare(vmgFiles);
